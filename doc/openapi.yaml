@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: Validator Service
+  version: 1.0.0
+  description: Service for validating emails and such
+  contact:
+    email: dev@zensum.se
+
+servers:
+  - url: /
+    description: This server
+
+paths:
+  /:
+    get:
+      description: Validate email or phone number
+      operationId: api.validate
+      parameters:
+        - in: query
+          name: email
+          description: Email to validate
+          schema:
+            type: string
+            example: dev@zensum.se
+            format: email
+        - in: query
+          name: phone_number
+          description: Phone number to validate
+          schema:
+            type: string
+            example: dev@zensum.se
+            format: phone_number
+      responses:
+        '200':
+          description: Valid payload
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/ValidResponse'
+        '400':
+          description: Invalid payload
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/InvalidResponse'
+
+components:
+  schemas:
+    ValidResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - valid
+      properties:
+        valid:
+          type: boolean
+          description: If the validation was valid
+          example: true
+          enum: [true]
+          nullable: false
+        formatted:
+          type: string
+          description: The formatted value of the sent property
+          nullable: false
+    InvalidResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - valid
+        - message
+        - formatted
+      properties:
+        valid:
+          type: boolean
+          description: If the validation was not valid
+          example: false
+          enum: [false]
+          nullable: false
+        message:
+          type: string
+          description: Message of why it was not valid
+          example: The email is not valid
+          nullable: false
+        formatted:
+          type: string
+          description: The formatted value of the sent property
+          nullable: true
