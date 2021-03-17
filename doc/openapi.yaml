@@ -22,14 +22,12 @@ paths:
           schema:
             type: string
             example: dev@zensum.se
-            format: email
         - in: query
           name: phone_number
           description: Phone number to validate
           schema:
             type: string
             example: dev@zensum.se
-            format: phone_number
       responses:
         '200':
           description: Valid payload
