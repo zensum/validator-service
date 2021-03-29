@@ -1,0 +1,9 @@
+version: "3.4"
+services:
+  service:
+    build: .
+    ports:
+      - 8080:80
+      - 10001:10001
+    volumes:
+      - .:/app

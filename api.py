@@ -1,7 +1,7 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict, Any
 from functools import wraps
 
-from flask import jsonify
+from flask import jsonify, request
 
 import validators.phone_number
 import validators.email
@@ -19,13 +19,26 @@ def responder(func):
 
 
 @responder
-def validate(phone_number: Optional[str] = None, email: Optional[str] = None) -> Tuple[bool, str]:
-    if not any([phone_number, email]):
-        return False, 'Need email or phone number', None
-    elif all([phone_number, email]):
-        return False, 'Can only take either phone number or email', None
+def validate() -> Tuple[bool, str, Optional[Any]]:
+    payload = request.json
+
+    country_code: Optional[str] = payload.get('country_code')
+
+    phone_number: Optional[str] = payload.get('phone_number')
+    email: Optional[str] = payload.get('email')
+    account: Optional[Dict] = payload.get('account')
+
+    if not any([phone_number, email, account]):
+        return False, 'Need account, email or phone number', None
+    elif sum([1 for x in [email, phone_number, account] if x]) > 1:
+        return False, 'Can only take one prop!', None
 
     if phone_number:
         return validators.phone_number.validate(phone_number)
     elif email:
         return validators.email.validate(email)
+    elif account:
+        if not country_code:
+            return False, 'Need country_code to validate account', account
+        return validators.account.validate(account, country_code)
+    return False, '', None  # should never reach this!

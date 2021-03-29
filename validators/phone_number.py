@@ -22,7 +22,7 @@ def _validate(p: str, cc: str = None, _try_again=True) -> Tuple[bool, str, str]:
     return False, f'Not a valid phone number for {cc}', p
 
 
-def validate(phone_number: str) -> bool:
+def validate(phone_number: str) -> Tuple[bool, str, str]:
     for c in [None, *list(SUPPORTED_COUNTRIES)]:
         valid, message, p = _validate(phone_number, c)
         if valid:
