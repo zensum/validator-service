@@ -1,0 +1,7 @@
+external-shared-libraries
+cm1_cert.p12
+supervisord.log
+.mypy_cache
+.docker-volumes
+.env
+__pycache__

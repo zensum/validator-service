@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "docker-compose-up",
+            "type": "docker-compose",
+            "dockerCompose": {
+                "up": {
+                    "detached": true,
+                    "build": false,  // set to true if you want to build docker images each time
+                    "services": ["service"]
+                },
+                "files": [
+                    "${workspaceFolder}/docker-compose.yml",
+                ]
+            }
+        }
+    ]
+}

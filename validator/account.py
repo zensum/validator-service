@@ -1,23 +1,26 @@
-from typing import Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, Union
 import re
 import logging
 
 import bankkonto  # type: ignore
 from bankkonto import BankkontoValidationError   # type: ignore
 
+from config import Config
 
-def _exception(m: str):
+def _exception(m: str) -> ValueError:
     return ValueError(f'Not a valid bank account. {m}')
 
-def validate(account: Dict, country_code: str) -> Tuple[bool, str, Dict]:
-    try:
-        return True, '', validate_and_normalize(account, country_code)
-    except Exception as e:
-        return False, str(e), account
+
+def validate(account: Dict[str, Any], country_code: Optional[str] = None) -> Dict[str, Any]:
+    for c in ([country_code] if country_code else Config.countries):
+        try:
+            return validate_and_normalize(account, c)
+        except Exception:
+            pass
+    raise _exception('Something went wrong')
 
 
-
-def validate_and_normalize(account: Dict, country_code: str) -> Dict:
+def validate_and_normalize(account: Dict[str, Any], country_code: str) -> Dict[str, Any]:
     if not country_code or country_code not in ['SE', 'NO']:
         raise _exception('Missing country_code')
     try:
@@ -34,7 +37,7 @@ def validate_and_normalize(account: Dict, country_code: str) -> Dict:
 
         if country_code == 'SE':
             if not clearing_no:
-                return _exception('Missing clearing_number')
+                raise _exception('Missing clearing_number')
             clearing_no, account_no = format_bank_account_se(clearing_no, account_no)
             try:
                 bankkonto.validate(clearing_no, account_no)
@@ -49,7 +52,7 @@ def validate_and_normalize(account: Dict, country_code: str) -> Dict:
 
         elif country_code == 'NO':
             if clearing_no:
-                raise _exception(f'Clearing number is not supported in NO')
+                raise _exception('Clearing number is not supported in NO')
             clearing_no = None
             account_no = format_bank_account_no(account_no)
             if len(account_no) != 11:
@@ -99,7 +102,7 @@ def format_bank_account_se(clearing_no: str, account_no: str) -> Tuple[str, str]
     return move_swedbank_digit(clearing_no, account_no)
 
 
-def truncate_swedbank_clearing_number(clearing_no: str, account_no: str):
+def truncate_swedbank_clearing_number(clearing_no: str, account_no: str) -> Tuple[str, str]:
     """Truncates clearing number to 4 digits for Swedbank which clearing numbers starting with 8 may have 5 digits"""
     if clearing_no[:1] == '8' and len(clearing_no) > 4:  # for Swedbank
         clearing_no = clearing_no[:4]
@@ -114,5 +117,5 @@ def move_swedbank_digit(clearing_no: str, account_no: str) -> Tuple[str, str]:
     return clearing_no, account_no
 
 
-def purge_non_digits(text) -> str:
+def purge_non_digits(text: str) -> str:
     return re.sub(r'[^0-9]', '', text)  # remove unwanted characters

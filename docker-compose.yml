@@ -1,9 +1,15 @@
-version: "3.4"
+version: '3.4'
 services:
   service:
-    build: .
-    ports:
-      - 8080:80
-      - 10001:10001
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV:-development}
     volumes:
-      - .:/app
+      - ./:/app
+      - ./docker/start_service.sh:/start_service.sh
+    ports:
+      - 5000:8000
+      - 5678:5678
+    command: bash /start_service.sh

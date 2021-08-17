@@ -5,11 +5,9 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 
 RUN pip install poetry
-RUN poetry export -f requirements.txt -o requirements.txt --without-hashes
-RUN pip install -r requirements.txt
-RUN pip install debugpy
+RUN poetry export -f requirements.txt -o requirements.txt --without-hashes --dev
 
-ENV FLASK_APP debugger.py
+RUN pip install -r requirements.txt
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -19,4 +17,4 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-CMD PORT=80 python main.py
+CMD uvicorn main:app --reload --host 0.0.0.0 --port $PORT

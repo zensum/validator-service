@@ -1,21 +1,31 @@
 [tool.poetry]
-name = "validator-service"
+name = "zrm"
 version = "0.1.0"
-description = "Validating emails and such"
+description = "Validator service"
 authors = ["Tobias Jeppesen <github@tobiasjeppesen.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-connexion = "^2.7.0"
-email-validator = "^1.1.2"
-phonenumbers = "^8.12.19"
-Flask-Cors = "^3.0.10"
-gunicorn = "^20.0.4"
+python = "3.9.6"
+fastapi = "^0.63.0"
+uvicorn = "^0.13.4"
+pydantic = {version = "1.8.1", extras = ["email"]}
+aiohttp = "^3.7.4"
 bankkonto = {git = "https://github.com/zensum/bankkonto.git"}
+phonenumbers = "^8.12.21"
+fodselsnummer = {git = "https://github.com/zensum/fodselsnummer.git"}
+personnummer = "^3.0.2"
+aiodns = "^2.0.0"
+async_lru = "^1.0.2"
+gunicorn = "^20.1.0"
+uvloop = "^0.16.0"
+httptools = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
-mypy = "^0.812"
 flake8 = "^3.9.0"
+mypy = "^0.812"
+flake8-quotes = "^3.2.0"
+debugpy = "^1.2.1"
+watchdog = {extras = ["watchmedo"], version = "^2.1.0"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
