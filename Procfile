@@ -1,2 +1,1 @@
-web: export CREATE_MONGO_INDEXES_AND_KEYS=true; export PYMONGOCRYPT_LIB=$(pwd)/external-shared-libraries/rhel-62-64-bit/nocrypto/lib64/libmongocrypt.so; gunicorn -c config/gunicorn.conf.py -k uvicorn.workers.UvicornWorker main:app
-worker: export PYMONGOCRYPT_LIB=$(pwd)/external-shared-libraries/rhel-62-64-bit/nocrypto/lib64/libmongocrypt.so; python rq_worker.py
+web: gunicorn -c config/gunicorn.conf.py -k uvicorn.workers.UvicornWorker main:app
