@@ -1,5 +1,5 @@
 import logging
-from typing import Literal, Optional, Union
+from typing import Optional
 
 from personnummer.personnummer import Personnummer  # type: ignore
 import fodselsnummer  # type: ignore
