@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post('/', response_model=ResponseModel)
-async def get_customer(
+async def validate(
     body: Union[Email, PNI, PhoneNumber, BankAccount],
 ) -> ResponseModel:
     for k in body.dict():

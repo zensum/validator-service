@@ -46,9 +46,8 @@ Pray 🙏🏼
 """,
     openapi_tags=[
         {
-            'name': 'Customer',
-            'description': '__Managing customers__. This is proxying requests for kunddatalagringstjänsten. '
-                           'Some validation is made on ZRM side and som is made on kunddatalagringstjänstens side.'
+            'name': 'Validator',
+            'description': '__Validating__. This method validates emails, phone numbers, pni and accounts. '
         },
     ],
 )
@@ -98,6 +97,7 @@ app.add_middleware(
 
 app.include_router(
     validator_router,
+    tags=['Validator'],
 )
 
 # this must be last middleware registered to catch all HTTPException exceptions in middlewares and convert to response
