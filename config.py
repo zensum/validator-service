@@ -53,9 +53,9 @@ class _Config(type):
         return self.is_true('WEB_WORKER')
 
     @property
-    def Origins(self) -> Union[str, List[str]]:
+    def Origins(self) -> List[str]:
         env_origins = os.getenv('CORS_ORIGINS', '').split(',')
-        return [o.strip() for o in env_origins] if env_origins else '*'
+        return [o.strip() for o in env_origins if o] or ['*']
 
     @property
     def request_id_key(self) -> str:
