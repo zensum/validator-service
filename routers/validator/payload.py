@@ -1,9 +1,8 @@
 from typing import Literal, Optional, Any, Dict
 
 from pydantic import EmailStr, Field, validator, BaseModel
-import email_validator  # type: ignore
 
-from validator import phone_number, pni, account
+from validator import phone_number, pni, account, email
 from config import Config
 
 
@@ -35,7 +34,7 @@ class Email(Country):
 
     @validator('email')
     def validate_email(cls, value: str) -> str:
-        email_validator.validate_email(value)
+        email.is_email(value)
         return value
 
 

@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple
 import re
 import logging
 
@@ -6,6 +6,7 @@ import bankkonto  # type: ignore
 from bankkonto import BankkontoValidationError   # type: ignore
 
 from config import Config
+
 
 def _exception(m: str) -> ValueError:
     return ValueError(f'Not a valid bank account. {m}')

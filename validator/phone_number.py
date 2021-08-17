@@ -1,6 +1,7 @@
 import re
 import logging
 from typing import Literal, NoReturn, Optional, Union
+from functools import cache
 
 import phonenumbers  # type: ignore
 
@@ -28,6 +29,7 @@ def _validate_and_normalize(p: str, cc: str = None, _try_again: bool = True) -> 
             raise e
 
 
+@cache
 def validate_and_normalize(phone_number: str, country_code: Optional[str] = None) -> str:
     try:
         if country_code:
@@ -46,11 +48,3 @@ def validate_and_normalize(phone_number: str, country_code: Optional[str] = None
             return p
     except Exception:
         return _exception()
-
-
-def is_phone_number(phone_number: str, country_code: str = None) -> bool:
-    try:
-        validate_and_normalize(phone_number, country_code)
-        return True
-    except Exception:
-        return False

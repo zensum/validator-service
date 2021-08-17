@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from functools import cache
 
 from personnummer.personnummer import Personnummer  # type: ignore
 import fodselsnummer  # type: ignore
@@ -7,6 +8,7 @@ import fodselsnummer  # type: ignore
 from config import Config
 
 
+@cache
 def validate_and_normalize(pni: str, country: Optional[str] = None) -> str:
     if not country:
         for cc in Config.countries:
