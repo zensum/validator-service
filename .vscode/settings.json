@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "python.pythonPath": "/Users/toni/Library/Caches/pypoetry/virtualenvs/validator-service-W9fW5Tij-py3.9/bin",
+}
