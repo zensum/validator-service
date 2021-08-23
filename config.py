@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Optional, List, Union
+from typing import Dict, Optional, List
 
 
 class ConfigException(ValueError):
