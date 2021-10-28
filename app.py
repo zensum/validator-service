@@ -102,7 +102,9 @@ async def add_cache_header(request: Request, call_next):  # type: ignore
     response = await call_next(request)
     process_time = time.time() - start_time
     response.headers['X-Process-Time'] = str(round(process_time * 1000)) + ' ms'
+
     response.headers['Cache-Control'] = f'max-age={10*60}'  # 10 min
+
     return response
 
 
