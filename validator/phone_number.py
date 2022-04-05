@@ -46,9 +46,10 @@ def validate_and_normalize(phone_number: str, country_code: Optional[str] = None
                 return validate_and_normalize(p, cc)
             except Exception:
                 return False
-        p = next(safe_validator(phone_number, cc) for cc in Config.countries)
-        if not p:
-            raise _exception()
-        return p
+        for cc in Config.countries:
+            p = safe_validator(phone_number, cc)
+            if p:
+                return p
+        raise _exception()
     except Exception:
         return _exception()
