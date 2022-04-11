@@ -9,7 +9,7 @@ from config import Config
 
 
 def _exception() -> NoReturn:
-    raise ValueError('Not a valid phone number for any of the supported countries.')
+    raise ValueError(f'Not a valid phone number for any of the supported countries {", ".join(Config.countries)}.')
 
 
 def _validate_and_normalize(p: str, cc: str = None, _try_again: bool = True) -> str:
@@ -32,19 +32,24 @@ def _validate_and_normalize(p: str, cc: str = None, _try_again: bool = True) -> 
 @cache
 def validate_and_normalize(phone_number: str, country_code: Optional[str] = None) -> str:
     try:
-        if country_code:
+        if not country_code:
+            try:
+                return _validate_and_normalize(phone_number, cc=None)
+            except Exception:
+                pass
+        elif country_code:
             return _validate_and_normalize(phone_number, country_code)
-        else:
-            logging.warning('Validating phone_number without knowing country!')
+        logging.warning('Validating phone_number without knowing country!')
 
-            def safe_validator(p: str, cc: str) -> Union[str, Literal[False]]:
-                try:
-                    return validate_and_normalize(p, cc)
-                except Exception:
-                    return False
-            p = next(safe_validator(phone_number, cc) for cc in Config.countries)
-            if not p:
-                raise _exception()
-            return p
+        def safe_validator(p: str, cc: str) -> Union[str, Literal[False]]:
+            try:
+                return validate_and_normalize(p, cc)
+            except Exception:
+                return False
+        for cc in Config.countries:
+            p = safe_validator(phone_number, cc)
+            if p:
+                return p
+        raise _exception()
     except Exception:
         return _exception()
