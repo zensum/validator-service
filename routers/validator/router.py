@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Type, Union
 
 from fastapi import APIRouter
 
@@ -24,13 +24,14 @@ async def validate(
 async def validate_safely(
     body: Dict[str, Any],
 ) -> ResponseModel:
-    for m in [Email, PNI, PhoneNumber, BankAccount]:
+    models: list[Type[Union[Email, PNI, PhoneNumber, BankAccount]]] = [Email, PNI, PhoneNumber, BankAccount]
+    for m in models:
         try:
-            parsed_model = m.parse_obj(body)
+            parsed_model: Union[Email, PNI, PhoneNumber, BankAccount] = m.parse_obj(body)
             for k in parsed_model.dict():
                 if k not in ['country']:
                     return ResponseModel(
-                        formatted=body[k],
+                        formatted=getattr(parsed_model, k),
                         valid=True,
                     )
         except Exception:
