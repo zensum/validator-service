@@ -30,7 +30,7 @@ async def validate_safely(
             for k in parsed_model.dict():
                 if k not in ['country']:
                     return ResponseModel(
-                        formatted=getattr(body, k),
+                        formatted=body[k],
                         valid=True,
                     )
         except Exception:
