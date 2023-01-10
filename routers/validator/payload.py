@@ -1,9 +1,9 @@
-from typing import Literal, Optional, Any, Dict
+from typing import Any, Dict, Literal, Optional
 
-from pydantic import EmailStr, Field, validator, BaseModel
+from pydantic import BaseModel, EmailStr, Field, validator
 
-from validator import phone_number, pni, account, email
 from config import Config
+from validator import account, email, phone_number, pni
 
 
 class Country(BaseModel):
@@ -55,5 +55,5 @@ class Account(Country):
 
 
 class ResponseModel(BaseModel):
-    valid: Literal[True] = Field(..., example=True)
+    valid: bool = Field(..., example=True)
     formatted: Any

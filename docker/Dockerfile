@@ -1,13 +1,20 @@
-FROM python:3.9.6
+FROM python:3.10.7
 
 COPY . /app
 WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 
-RUN pip install poetry
-RUN poetry export -f requirements.txt -o requirements.txt --without-hashes --dev
+RUN rm -rf python-poetry-buildpack && \
+    git clone https://github.com/zensum/python-poetry-buildpack.git
 
+RUN rm -rf /app/requirements.txt /app/runtime.txt
+ENV POETRY_VERSION=1.1.15
+RUN python-poetry-buildpack/bin/compile /app _ /app
+
+RUN apt-get update && apt-get install -y "python$(cat app/runtime.txt | sed 's/python-//' | sed 's/\(.*\)\.[0-9]/\1/')"
+WORKDIR /app
 RUN pip install -r requirements.txt
+RUN pip install debugpy "watchdog[watchmedo]"
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE 1

@@ -5,7 +5,7 @@ description = "Validator service"
 authors = ["Tobias Jeppesen <github@tobiasjeppesen.com>"]
 
 [tool.poetry.dependencies]
-python = "3.9.7"
+python = "3.10.7"
 fastapi = "^0.63.0"
 uvicorn = "^0.13.4"
 pydantic = {version = "1.8.1", extras = ["email"]}
