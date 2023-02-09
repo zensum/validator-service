@@ -1,9 +1,10 @@
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from config import Config
-from validator import account, email, phone_number, pni
+from shared.validator import email, phone_number, pni
+from validator import account
 
 
 class Country(BaseModel):
