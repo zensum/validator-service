@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Optional, List
+from typing import Dict, List, Optional
 
 
 class ConfigException(ValueError):
@@ -68,10 +68,6 @@ class _Config(type):
     @property
     def VSCODE_DEBUGGING(self) -> bool:
         return self.is_true('VSCODE_DEBUGGING')
-
-    @property
-    def countries(self) -> List[str]:
-        return ['SE', 'NO']
 
 
 class Config(metaclass=_Config):

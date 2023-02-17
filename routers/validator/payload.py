@@ -1,28 +1,22 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from pydantic import BaseModel, EmailStr, Field, validator
 
-from config import Config
+from shared.common import Country
 from shared.validator import email, phone_number, pni
 from validator import account
 
 
-class Country(BaseModel):
-    country: Optional[str] = Field(example='SE')
-
-    @validator('country', check_fields=False)
-    def validate_country(cls, value: str) -> str:
-        if value and value not in Config.countries:
-            raise ValueError(f'{value} is not in {",".join(Config.countries)}')
-        return value
+class CountryModel(BaseModel):
+    country: Country | None = Field(example=Country.SWEDEN.value)
 
 
 class BankAccount(BaseModel):
-    clearing_number: Optional[str] = Field(example='1337')
+    clearing_number: str | None = Field(example='1337')
     account_number: str = Field(..., example='1234567')
 
 
-class PNI(Country):
+class PNI(CountryModel):
     pni: str = Field(..., example='194907011813')
 
     @validator('pni')
@@ -30,7 +24,7 @@ class PNI(Country):
         return pni.validate_and_normalize(value, values.get('country'))
 
 
-class Email(Country):
+class Email(CountryModel):
     email: EmailStr
 
     @validator('email')
@@ -39,7 +33,7 @@ class Email(Country):
         return value
 
 
-class PhoneNumber(Country):
+class PhoneNumber(CountryModel):
     phone_number: str = Field(..., example='+46761234567')
 
     @validator('phone_number')
@@ -47,8 +41,8 @@ class PhoneNumber(Country):
         return phone_number.validate_and_normalize(value, values.get('country'))
 
 
-class Account(Country):
-    account: Optional[BankAccount] = None
+class Account(CountryModel):
+    account: BankAccount | None
 
     @validator('account')
     def validate_account(cls, value: Dict[str, Any], values: Dict[str, Any]) -> Dict[str, Any]:

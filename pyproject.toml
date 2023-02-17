@@ -5,10 +5,10 @@ description = "Validator service"
 authors = ["Tobias Jeppesen <github@tobiasjeppesen.com>"]
 
 [tool.poetry.dependencies]
-python = "3.10.7"
-fastapi = "^0.63.0"
+python = "3.10.9"
+fastapi = "^0.92.0"
 uvicorn = "^0.13.4"
-pydantic = {version = "1.8.1", extras = ["email"]}
+pydantic = {extras = ["email"], version = "^1.10.4"}
 aiohttp = "^3.7.4"
 bankkonto = {git = "https://github.com/zensum/bankkonto.git"}
 phonenumbers = "^8.12.21"

@@ -1,15 +1,18 @@
 import json
+import logging
 import time
 from typing import Any
 
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import ClientDisconnect
 from starlette.responses import Response
 
+from config import Config
 from routers.middlewares.request_id import RequestIDContextMiddleware
 from routers.validator import router as validator_router
-from config import Config
+from routers.validator import router_v2 as validator_router_v2
 from utils.setup_logger import setup_logging
 
 app: FastAPI = FastAPI(
@@ -77,13 +80,6 @@ async def add_process_time_header(request: Request, call_next):  # type: ignore
     return response
 
 
-async def http_exception_middleware(request: Request, call_next: Any) -> Response:
-    try:
-        return await call_next(request)
-    except HTTPException as e:
-        return Response(json.dumps(dict(detail=e.detail)), status_code=e.status_code, headers=e.headers)
-
-
 app.add_middleware(RequestIDContextMiddleware)
 
 app.add_middleware(
@@ -112,6 +108,36 @@ app.include_router(
     validator_router,
     tags=['Validator'],
 )
+
+
+app.include_router(
+    validator_router_v2,
+    prefix='/v2',
+    tags=['Validator'],
+)
+
+
+async def http_exception_middleware(request: Request, call_next: Any) -> Response:
+    try:
+        resp = await call_next(request)
+        if request.url.path.startswith('/v2') and resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY:
+            return Response(
+                json.dumps({'valid': False}),
+                status_code=status.HTTP_200_OK,
+                headers={
+                    header: resp.headers[header]
+                    for header in resp.headers
+                    if header != 'content-length'
+                },
+            )
+        return resp
+    except ClientDisconnect:
+        return Response(status_code=499)
+    except HTTPException as e:
+        return Response(json.dumps(dict(detail=e.detail)), status_code=e.status_code, headers=e.headers)
+    except Exception as e:
+        logging.info(f'Exception: {e}', exc_info=e)
+        return Response(json.dumps(dict(detail=str(e))), status_code=500)
 
 # this must be last middleware registered to catch all HTTPException exceptions in middlewares and convert to response
 app.add_middleware(BaseHTTPMiddleware, dispatch=http_exception_middleware)

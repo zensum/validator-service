@@ -11,5 +11,5 @@ services:
       - ./docker/start_service.sh:/start_service.sh
     ports:
       - 5036:8000
-      - 5678:5678
+      - 5778:5678
     command: bash /start_service.sh
