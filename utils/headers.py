@@ -4,7 +4,7 @@ from config import Config
 from utils.request_id import get_request_id
 
 
-def get_headers(token: str = None) -> Dict[str, str]:
+def get_headers(token: str | None = None) -> Dict[str, str]:
     headers = {'Content-Type': 'application/json'}
     if token:
         headers['Authorization'] = f'Bearer {token}'

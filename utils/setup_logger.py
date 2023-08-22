@@ -12,7 +12,9 @@ class RequestIDLogFilter(logging.Filter):
 
 def setup_logging() -> None:
     logger = logging.getLogger('root')
-    formatter = logging.Formatter('%(asctime)s | %(name)s | %(levelname)s | %(module)s:%(funcName)s():%(lineno)d | %(request_id)s | %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s | %(name)s | %(levelname)s | %(module)s:%(funcName)s():%(lineno)d | %(request_id)s | %(message)s'
+    )
     console_handler = logging.StreamHandler()
 
     logger.setLevel(Config.LOG_LEVEL)

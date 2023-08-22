@@ -5,28 +5,40 @@ description = "Validator service"
 authors = ["Tobias Jeppesen <github@tobiasjeppesen.com>"]
 
 [tool.poetry.dependencies]
-python = "3.10.7"
-fastapi = "^0.63.0"
-uvicorn = "^0.13.4"
-pydantic = {version = "1.8.1", extras = ["email"]}
+python = "3.10.12"
+fastapi = "^0.90.0"
+uvicorn = "^0.20.0"
+pydantic = {version = "<2", extras = ["email"]}
 aiohttp = "^3.7.4"
-bankkonto = {git = "https://github.com/zensum/bankkonto.git"}
+bankkonto = {git = "https://github.com/zensum/bankkonto.git", develop = true, rev = "be80a23"}
 phonenumbers = "^8.12.21"
-fodselsnummer = {git = "https://github.com/zensum/fodselsnummer.git"}
+fodselsnummer = {git = "https://github.com/zensum/fodselsnummer.git", rev="ef6f69694c302e7cabe610eead58fe82d6494d43"}
 personnummer = "^3.0.2"
-aiodns = "^2.0.0"
+aiodns = "^3.0.0"
 async_lru = "^1.0.2"
 gunicorn = "^20.1.0"
-uvloop = "^0.16.0"
-httptools = "^0.3.0"
+uvloop = "^0.17.0"
+httptools = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.9.0"
-mypy = "^0.812"
+flake8 = "*"
+mypy = "*"
 flake8-quotes = "^3.2.0"
 debugpy = "^1.2.1"
 watchdog = {extras = ["watchmedo"], version = "^2.1.0"}
 
+[tool.poetry.group.dev.dependencies]
+types-python-dateutil = "^2.8.19.14"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+exclude = '(shared/mortgage|shared/blanco|dw/launcher|openbroker/mortgage-specification)'
+
+[tool.isort]
+profile = "black"
+skip_glob = ['shared/blanco/**', 'shared/mortgage/**', 'dw/launcher/**', 'openbroker/mortgage-specification/**']

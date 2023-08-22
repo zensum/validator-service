@@ -3,7 +3,7 @@ import re
 import logging
 
 import bankkonto  # type: ignore
-from bankkonto import BankkontoValidationError   # type: ignore
+from bankkonto import BankkontoValidationError
 
 from config import Config
 
@@ -21,7 +21,7 @@ def validate(account: Dict[str, Any], country_code: Optional[str] = None) -> Dic
     raise _exception('Something went wrong')
 
 
-def validate_and_normalize(account: Dict[str, Any], country_code: str) -> Dict[str, Any]:
+def validate_and_normalize(account: Dict[str, Any], country_code: str) -> Dict[str, Any]:  # noqa: C901
     if not country_code or country_code not in ['SE', 'NO']:
         raise _exception('Missing country_code')
     try:
