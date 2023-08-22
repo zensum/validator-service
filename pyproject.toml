@@ -10,9 +10,9 @@ fastapi = "^0.90.0"
 uvicorn = "^0.20.0"
 pydantic = {version = "1.10.4", extras = ["email"]}
 aiohttp = "^3.7.4"
-bankkonto = {git = "https://github.com/zensum/bankkonto.git"}
+bankkonto = {git = "https://github.com/zensum/bankkonto.git", develop = true, rev = "be80a23"}
 phonenumbers = "^8.12.21"
-fodselsnummer = {git = "https://github.com/zensum/fodselsnummer.git"}
+fodselsnummer = {git = "https://github.com/zensum/fodselsnummer.git", rev="ef6f69694c302e7cabe610eead58fe82d6494d43"}
 personnummer = "^3.0.2"
 aiodns = "^3.0.0"
 async_lru = "^1.0.2"
